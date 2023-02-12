@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         Auto fill to ChatGPT
 // @description  Auto fill prompt to ChatGPT and get instantly result
-// @version      0.3
+// @version      0.4
 // @source       https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoFillChatGPT.user.js
 // @namespace    https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoFillChatGPT.user.js
 // @website      https://fullstackladder.dev/
 // @author       Mike Huang
 // @license      MIT
-// @match        *//chat.openai.com/chat*
+// @match        *://chat.openai.com/chat*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=openai.com
 // @grant        none
 // ==/UserScript==
