@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto fill to ChatGPT
 // @namespace    https://fullstackladder.dev
-// @version      0.1
+// @version      0.2
 // @description  Auto fill prompt to ChatGPT and get instantly result
 // @author       Mike Huang
 // @match        https://chat.openai.com/chat*
