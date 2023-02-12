@@ -29,7 +29,8 @@
         "button.absolute.p-1.rounded-md.text-gray-500.bottom-1\\.5.right-1.md\\:bottom-2\\.5.md\\:right-2.hover\\:bg-gray-100.dark\\:hover\\:text-gray-400.dark\\:hover\\:bg-gray-900.disabled\\:hover\\:bg-transparent.dark\\:disabled\\:hover\\:bg-transparent"
       );
       textarea.value = decodeURIComponent(prompt).replace(/\\n/g, "\n");
-      button.click();
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+      //button.click();
 
       // 移除 prompt 參數
       searchParams.delete("prompt");
