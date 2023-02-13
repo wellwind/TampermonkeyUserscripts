@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto fill to ChatGPT
 // @description  Auto fill prompt to ChatGPT and get instantly result
-// @version      1.0.1
+// @version      1.1.1
 // @source       https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoFillChatGPT.user.js
 // @namespace    https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoFillChatGPT.user.js
 // @website      https://fullstackladder.dev/
@@ -36,10 +36,9 @@
         button.click();
       }
 
-      // 移除 prompt 參數
-      searchParams.delete("prompt");
+      // 移除參數
       searchParams.delete("autoSubmit");
-      
+
       // 更新網址
       const newUrl = `${window.location.origin}${
         window.location.pathname
