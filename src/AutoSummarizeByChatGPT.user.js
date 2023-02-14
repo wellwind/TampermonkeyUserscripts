@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto summarize article by ChatGPT
 // @description  Send article to ChatGPT and get summarization result
-// @version      0.1.0
+// @version      0.1.2
 // @source       https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoSummarizeByChatGPT.user.js
 // @namespace    https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoSummarizeByChatGPT.user.js
 // @website      https://fullstackladder.dev/
@@ -41,7 +41,7 @@ const registerContextMenu = async () => {
     "Summarize this article",
     async () => {
       const promptBase =
-        "請使用流暢的繁體中文分析以下文章，提供我簡短的文章總結，並盡可能用條列的方式表示";
+        "請使用流暢的繁體中文分析以下文章，以條列的方式幫我總結文章重點";
 
       const article = document.querySelector("article");
 
