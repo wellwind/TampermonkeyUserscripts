@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto summarize article by ChatGPT
 // @description  Send article to ChatGPT and get summarization result
-// @version      0.1.2
+// @version      0.2.0
 // @source       https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoSummarizeByChatGPT.user.js
 // @namespace    https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoSummarizeByChatGPT.user.js
 // @website      https://fullstackladder.dev/
@@ -36,13 +36,19 @@ const setAutoFill = async () => {
   }, 1000);
 };
 
-const registerContextMenu = async () => {
+const openChatGPT = async (text) => {
+  const promptBase =
+    "請使用流暢的繁體中文分析以下文章，以條列的方式幫我總結文章重點";
+  // 設定 prompt 並打開 ChatGPT
+  const prompt = `${promptBase}\n\n${text}`;
+  await GM.setValue("prompt", prompt);
+  window.open("https://chat.openai.com/chat", "_blank");
+};
+
+const registerSummarizeArticle = async () => {
   GM.registerMenuCommand(
     "Summarize this article",
     async () => {
-      const promptBase =
-        "請使用流暢的繁體中文分析以下文章，以條列的方式幫我總結文章重點";
-
       const article = document.querySelector("article");
 
       // 有 article 標籤才處理
@@ -56,10 +62,31 @@ const registerContextMenu = async () => {
           tag.remove();
         });
 
-        // 設定 prompt 並打開 ChatGPT
-        const prompt = `${promptBase}\n\n${clonedArticle.innerText}`;
-        await GM.setValue("prompt", prompt);
-        window.open("https://chat.openai.com/chat", "_blank");
+        openChatGPT(clonedArticle.innerText);
+      }
+    },
+    "c"
+  );
+};
+
+const registerSummarizeSelection = async () => {
+  const getSelectionText = () => {
+    let selectedText = "";
+    if (window.getSelection) {
+      selectedText = window.getSelection().toString();
+    } else if (document.selection && document.selection.type != "Control") {
+      selectedText = document.selection.createRange().text;
+    }
+    return selectedText;
+  };
+  GM.registerMenuCommand(
+    "Summarize selected text",
+    async () => {
+      const text = getSelectionText();
+
+      // 有 text 標籤才處理
+      if (text) {
+        openChatGPT(text);
       }
     },
     "c"
@@ -70,10 +97,9 @@ const registerContextMenu = async () => {
   "use strict";
 
   if (location.hostname === "chat.openai.com") {
-    console.log("submit");
     await setAutoFill();
   } else {
-    console.log("register");
-    await registerContextMenu();
+    await registerSummarizeArticle();
+    await registerSummarizeSelection();
   }
 })();
