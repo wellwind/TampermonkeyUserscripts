@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto fill to ChatGPT
 // @description  Auto fill prompt to ChatGPT and get instantly result
-// @version      1.1.3
+// @version      2.0.0
 // @source       https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoFillChatGPT.user.js
 // @namespace    https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoFillChatGPT.user.js
 // @website      https://fullstackladder.dev/
@@ -15,12 +15,20 @@
 (function () {
   "use strict";
 
-  // 取得網址搜尋字串
-  const searchParams = new URLSearchParams(window.location.search);
+  // 取得 # 後面的內容
+  var hash = window.location.hash.slice(1);
+
+  // 將 # 後面的內容轉換成查詢字串
+  var query = hash.replace(/([^&=]+)=([^&]*)/g, (_, key, value) => {
+    return key + "=" + encodeURIComponent(value);
+  });
+
+  // 解析查詢字串並取得所需的參數
+  var params = new URLSearchParams(query);
 
   // 解析參數
-  const prompt = searchParams.get("prompt");
-  const autoSubmit = searchParams.get("autoSubmit");
+  const prompt = params.get("prompt");
+  const autoSubmit = params.get("autoSubmit");
 
   if (prompt) {
     // 隔一秒再處理，避免畫面還沒準備好
@@ -38,21 +46,8 @@
         button.click();
       }
 
-      // 移除參數
-      searchParams.delete("prompt");
-      searchParams.delete("autoSubmit");
-
       // 更新網址
-      let newUrl = `${window.location.origin}${window.location.pathname}`;
-      
-      if (Array.from(searchParams.entries()).length > 0) {
-        // 把剩下的查詢參數補上
-        newUrl += `?${searchParams.toString()}`;
-      } else {
-        // 沒有其他查詢參數的話，連 ? 都不要
-        newUrl = location.href.split("?")[0];
-      }
-      window.history.replaceState({}, "", newUrl);
+      history.replaceState({}, document.title, window.location.pathname + window.location.search);
     }, 1000);
   }
 })();
