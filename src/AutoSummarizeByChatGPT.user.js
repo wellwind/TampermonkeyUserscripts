@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto summarize article by ChatGPT
 // @description  Send article to ChatGPT and get summarization result
-// @version      0.2.0
+// @version      0.3.0
 // @source       https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoSummarizeByChatGPT.user.js
 // @namespace    https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoSummarizeByChatGPT.user.js
 // @website      https://fullstackladder.dev/
@@ -14,6 +14,10 @@
 // @grant        GM.getValue
 // @grant        GM.registerMenuCommand
 // ==/UserScript==
+
+const promptBaseSummarize = "請使用流暢的繁體中文分析以下文章，以條列的方式幫我總結文章重點";
+const promptBaseTranslateTC = "請使用流暢的繁體中文翻譯以下文章，以下是要請你使用繁體中文翻譯的內容：";
+const promptBaseTranslateEN = "請使用流暢的美式英文翻譯以下文章，以下是要請你使用美式英文翻譯的內容：";
 
 const setAutoFill = async () => {
   // 隔一秒再處理，避免畫面還沒準備好
@@ -36,11 +40,10 @@ const setAutoFill = async () => {
   }, 1000);
 };
 
-const openChatGPT = async (text) => {
-  const promptBase =
-    "請使用流暢的繁體中文分析以下文章，以條列的方式幫我總結文章重點";
+const openChatGPT = async (basePrompt, text) => {
+  
   // 設定 prompt 並打開 ChatGPT
-  const prompt = `${promptBase}\n\n${text}`;
+  const prompt = `${basePrompt}\n\n${text}`;
   await GM.setValue("prompt", prompt);
   window.open("https://chat.openai.com/chat", "_blank");
 };
@@ -62,23 +65,24 @@ const registerSummarizeArticle = async () => {
           tag.remove();
         });
 
-        openChatGPT(clonedArticle.innerText);
+        openChatGPT(promptBaseSummarize, clonedArticle.innerText);
       }
     },
-    "c"
+    "a"
   );
 };
 
+const getSelectionText = () => {
+  let selectedText = "";
+  if (window.getSelection) {
+    selectedText = window.getSelection().toString();
+  } else if (document.selection && document.selection.type != "Control") {
+    selectedText = document.selection.createRange().text;
+  }
+  return selectedText;
+};
+
 const registerSummarizeSelection = async () => {
-  const getSelectionText = () => {
-    let selectedText = "";
-    if (window.getSelection) {
-      selectedText = window.getSelection().toString();
-    } else if (document.selection && document.selection.type != "Control") {
-      selectedText = document.selection.createRange().text;
-    }
-    return selectedText;
-  };
   GM.registerMenuCommand(
     "Summarize selected text",
     async () => {
@@ -86,10 +90,40 @@ const registerSummarizeSelection = async () => {
 
       // 有 text 標籤才處理
       if (text) {
-        openChatGPT(text);
+        openChatGPT(promptBaseSummarize, text);
       }
     },
-    "c"
+    "s"
+  );
+};
+
+const registerTranslateTCSelection = async () => {
+  GM.registerMenuCommand(
+    "Translate selected text to Traditional Chinese",
+    async () => {
+      const text = getSelectionText();
+
+      // 有 text 標籤才處理
+      if (text) {
+        openChatGPT(promptBaseTranslateTC, text);
+      }
+    },
+    "t"
+  );
+};
+
+const registerTranslateENSelection = async () => {
+  GM.registerMenuCommand(
+    "Translate selected text to English",
+    async () => {
+      const text = getSelectionText();
+
+      // 有 text 標籤才處理
+      if (text) {
+        openChatGPT(promptBaseTranslateEN, text);
+      }
+    },
+    "t"
   );
 };
 
@@ -101,5 +135,7 @@ const registerSummarizeSelection = async () => {
   } else {
     await registerSummarizeArticle();
     await registerSummarizeSelection();
+    await registerTranslateTCSelection();
+    await registerTranslateENSelection();
   }
 })();
