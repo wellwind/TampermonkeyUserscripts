@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto fill to ChatGPT
 // @description  Auto fill prompt to ChatGPT and get instantly result
-// @version      2.0.0
+// @version      2.0.1
 // @source       https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoFillChatGPT.user.js
 // @namespace    https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoFillChatGPT.user.js
 // @website      https://fullstackladder.dev/
@@ -40,9 +40,8 @@
 
       // 自動送出
       if (autoSubmit) {
-        const button = textarea.parentElement.querySelector(
-          "button.absolute.p-1.rounded-md.text-gray-500.bottom-1\\.5.right-1.md\\:bottom-2\\.5.md\\:right-2.hover\\:bg-gray-100.dark\\:hover\\:text-gray-400.dark\\:hover\\:bg-gray-900.disabled\\:hover\\:bg-transparent.dark\\:disabled\\:hover\\:bg-transparent"
-        );
+        // 避免有複數按鈕
+        const button = textarea.parentElement.querySelector("button:last-child");
         button.click();
       }
 
