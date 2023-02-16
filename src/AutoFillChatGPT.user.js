@@ -28,7 +28,7 @@
 
   // 解析參數
   const prompt = params.get("prompt");
-  const autoSubmit = params.get("autoSubmit");
+  const autoSubmit = !!params.get("autoSubmit");
 
   if (prompt) {
     // 隔一秒再處理，避免畫面還沒準備好
