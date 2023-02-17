@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT: 自動填入提示文字並自動送出
 // @description  自動填入 ChatGPT 提示文字並可設定自動送出提問
-// @version      2.1.1
+// @version      2.2.0
 // @source       https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoFillChatGPT.user.js
 // @namespace    https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoFillChatGPT.user.js
 // @website      https://fullstackladder.dev/
@@ -12,40 +12,55 @@
 // @grant        none
 // ==/UserScript==
 
-(function () {
-  "use strict";
+(async function () {
+    "use strict";
 
-  // 解析 hash 中的查詢字串並取得所需的參數
-  var params = new URLSearchParams(location.hash.substring(1));
+    const {
+        filter,
+        interval,
+        map,
+        take
+    } = await import('https://cdn.jsdelivr.net/npm/@esm-bundle/rxjs/esm/es2015/rxjs.min.js');
 
-  // 解析參數
-  let prompt = params.get("prompt");
-  let autoSubmit = false;
+    /**
+     * 等待 focus 到訊息輸入框就開始初始化功能
+     */
+    interval(100).pipe(
+        map(() => document.activeElement),
+        filter((element) => element.tagName === 'TEXTAREA' && element.nextSibling.tagName === 'BUTTON'),
+        take(1)
+    )
+        .subscribe((textarea) => {
+            // 預設的送出按鈕
+            const button = textarea.parentElement.querySelector("button:last-child");
 
-  switch (params.get("autoSubmit")) {
-    case 'true':
-    case '1':
-      autoSubmit = true
-      break;
-  }
+            // 解析 hash 中的查詢字串並取得所需的參數
+            var params = new URLSearchParams(location.hash.substring(1));
 
-  if (prompt) {
-    // 隔一秒再處理，避免畫面還沒準備好
-    setTimeout(() => {
-      // 填入 prompt
-      const textarea = document.querySelector("textarea[data-id=root]");
-      textarea.value = decodeURIComponent(prompt).replace(/\\n/g, "\n");
-      textarea.dispatchEvent(new Event("input", { bubbles: true }));
+            // 解析參數
+            let prompt = params.get('prompt')
+                .replace(/\\r/g, '')
+                .replace(/\\n/g, '\n')
+                .replace(/\s+$/mg, '')
+                .replace(/\n{3,}/g, '\n\n')
+                .replace(/^\s+|\s+$/g, '')
+            let submit = params.get("autoSubmit");
 
-      // 自動送出
-      if (autoSubmit) {
-        // 避免有複數按鈕
-        const button = textarea.parentElement.querySelector("button:last-child");
-        button.click();
-      }
+            let autoSubmit = false;
+            if (submit == '1' || submit == 'true') {
+                autoSubmit = true
+            }
 
-      // 更新網址
-      history.replaceState({}, document.title, window.location.pathname + window.location.search);
-    }, 1000);
-  }
+            if (prompt) {
+                textarea.value = prompt;
+                textarea.dispatchEvent(new Event("input", { bubbles: true }));
+
+                if (autoSubmit) {
+                    button.click();
+                }
+
+                history.replaceState({}, document.title, window.location.pathname + window.location.search);
+            }
+
+        });
 })();
