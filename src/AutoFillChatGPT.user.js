@@ -12,25 +12,17 @@
 // @grant        none
 // ==/UserScript==
 
-(async function () {
+(function () {
     "use strict";
-
-    const {
-        filter,
-        interval,
-        map,
-        take
-    } = await import('https://cdn.jsdelivr.net/npm/@esm-bundle/rxjs/esm/es2015/rxjs.min.js');
 
     /**
      * 等待 focus 到訊息輸入框就開始初始化功能
      */
-    interval(100).pipe(
-        map(() => document.activeElement),
-        filter((element) => element.tagName === 'TEXTAREA' && element.nextSibling.tagName === 'BUTTON'),
-        take(1)
-    )
-        .subscribe((textarea) => {
+
+    let it = setInterval(() => {
+        let textarea = document.activeElement;
+        if (textarea.tagName === 'TEXTAREA' && textarea.nextSibling.tagName === 'BUTTON') {
+
             // 預設的送出按鈕
             const button = textarea.parentElement.querySelector("button:last-child");
 
@@ -39,11 +31,10 @@
 
             // 解析參數
             let prompt = params.get('prompt')
-                .replace(/\\r/g, '')
-                .replace(/\\n/g, '\n')
-                .replace(/\s+$/mg, '')
-                .replace(/\n{3,}/g, '\n\n')
-                .replace(/^\s+|\s+$/g, '')
+                .replace(/\r/g, '')
+                .replace(/\s+$/g, '')
+                .replace(/\n{3,}/sg, '\n\n')
+                .replace(/^\s+|\s+$/sg, '')
             let submit = params.get("autoSubmit");
 
             let autoSubmit = false;
@@ -54,6 +45,9 @@
             if (prompt) {
                 textarea.value = prompt;
                 textarea.dispatchEvent(new Event("input", { bubbles: true }));
+                textarea.focus();
+                textarea.setSelectionRange(textarea.value.length, textarea.value.length); //將選擇範圍設定為文本的末尾
+                textarea.scrollTop = textarea.scrollHeight; // 自動捲動到最下方
 
                 if (autoSubmit) {
                     button.click();
@@ -62,5 +56,8 @@
                 history.replaceState({}, document.title, window.location.pathname + window.location.search);
             }
 
-        });
+            clearInterval(it);
+        }
+    }, 60);
+
 })();
