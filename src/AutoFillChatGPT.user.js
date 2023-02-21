@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT: 自動填入提示文字並自動送出
 // @description  自動填入 ChatGPT 提示文字並可設定自動送出提問
-// @version      3.0.0
+// @version      3.0.1
 // @source       https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoFillChatGPT.user.js
 // @namespace    https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoFillChatGPT.user.js
 // @website      https://fullstackladder.dev/
@@ -80,7 +80,7 @@ const fillAndSubmitText = (test) => {
 
 const defaultManualSubmitText = [
   // exemplify
-  { 'text': '舉例說明', 'value': '請舉例說明' },
+  { text: "舉例說明", value: "請舉例說明" },
   // expand
   { text: "提供細節", value: "請提供更多細節說明" },
   // explain
@@ -93,10 +93,10 @@ const defaultManualSubmitText = [
   { text: "翻譯成繁中", value: "請將上述內容翻譯成流暢的繁體中文" },
   // translate to EN
   { text: "翻譯成英文", value: "請將上述內容翻譯成流暢的英文" },
-]
+];
 
 const registerContextMenuToAutoFill = () => {
-  defaultManualSubmitText.forEach(item => {
+  defaultManualSubmitText.forEach((item) => {
     GM.registerMenuCommand(item.text, async () => {
       fillAndSubmitText(item.value);
     });
@@ -126,32 +126,33 @@ const addButtonsToSendDefaultMessage = () => {
     // 先將原來動態加入的內容移除
 
     // remove custom buttons
-    globalButtons.forEach(button => button.remove());
+    globalButtons.forEach((button) => button.remove());
     globalButtons = [];
 
     // remove buttons area
-    if(buttonsArea) {
+    if (buttonsArea) {
       buttonsArea.remove();
     }
 
     // 重新將按鈕區和按鈕移除
 
     // create a new buttons area
-    buttonsArea = document.createElement('div');
-    buttonsArea.classList = 'custom-buttons-area text-base m-auto md:max-w-2xl lg:max-w-2xl xl:max-w-3xl p-4 md:py-6 flex lg:px-0';
-    buttonsArea.style.overflowY = 'auto';
-    buttonsArea.style.display = 'flex';
-    buttonsArea.style.flexWrap = 'wrap';
+    buttonsArea = document.createElement("div");
+    buttonsArea.classList =
+      "custom-buttons-area text-base m-auto md:max-w-2xl lg:max-w-2xl xl:max-w-3xl p-4 md:py-6 flex lg:px-0";
+    buttonsArea.style.overflowY = "auto";
+    buttonsArea.style.display = "flex";
+    buttonsArea.style.flexWrap = "wrap";
     buttonsArea.style.paddingTop = 0;
-    talkBlockToInsertButtons.after(buttonsArea)
+    talkBlockToInsertButtons.after(buttonsArea);
 
     // add buttons
-    defaultManualSubmitText.forEach(item => { 
+    defaultManualSubmitText.forEach((item) => {
       const button = document.createElement("button");
-      button.style.border = '1px solid #d1d5db';
-      button.style.borderRadius = '5px';
-      button.style.padding = '0.5rem 1rem';
-      button.style.margin = '0.5rem';
+      button.style.border = "1px solid #d1d5db";
+      button.style.borderRadius = "5px";
+      button.style.padding = "0.5rem 1rem";
+      button.style.margin = "0.5rem";
 
       button.innerText = item.text;
       button.addEventListener("click", () => {
@@ -167,11 +168,15 @@ const addButtonsToSendDefaultMessage = () => {
   });
 
   const start = () => {
-    obs.observe(main.parentElement, { childList: true, attributes: true, subtree: true });
-  }
+    obs.observe(main.parentElement, {
+      childList: true,
+      attributes: true,
+      subtree: true,
+    });
+  };
   const stop = () => {
     obs.disconnect();
-  }
+  };
 
   start();
 };
