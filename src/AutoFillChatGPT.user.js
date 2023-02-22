@@ -1,21 +1,21 @@
 // ==UserScript==
 // @name         ChatGPT: 自動填入提示文字並自動送出
 // @description  自動填入 ChatGPT 提示文字並可設定自動送出提問
-// @version      3.1.1
+// @version      3.1.3
 // @source       https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoFillChatGPT.user.js
 // @namespace    https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoFillChatGPT.user.js
 // @website      https://fullstackladder.dev/
 // @author       Mike Huang
+// @run-at       document-end
 // @license      MIT
 // @match        *://chat.openai.com/chat*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=openai.com
-// @grant        GM.registerMenuCommand
 // ==/UserScript==
 
 const autoFillFromSegment = () => {
-  /**
-   * 等待 focus 到訊息輸入框就開始初始化功能
-   */
+  if (!location.hash) {
+    return;
+  }
 
   // 解析 hash 中的查詢字串並取得所需的參數
   const params = new URLSearchParams(location.hash.substring(1));
@@ -33,6 +33,10 @@ const autoFillFromSegment = () => {
   if (!prompt) {
     return;
   }
+
+  /**
+   * 等待 focus 到訊息輸入框就開始初始化功能
+   */
   const it = setInterval(() => {
     const textarea = document.activeElement;
     if (
@@ -72,9 +76,7 @@ const fillAndSubmitText = (test) => {
   textarea.value = test;
   textarea.dispatchEvent(new Event("input", { bubbles: true }));
 
-  const button = textarea.parentElement.querySelector(
-    "button.absolute.p-1.rounded-md.text-gray-500.bottom-1\\.5.right-1.md\\:bottom-2\\.5.md\\:right-2.hover\\:bg-gray-100.dark\\:hover\\:text-gray-400.dark\\:hover\\:bg-gray-900.disabled\\:hover\\:bg-transparent.dark\\:disabled\\:hover\\:bg-transparent"
-  );
+  const button = textarea.parentElement.querySelector("button:last-child");
   button.click();
 };
 
@@ -96,14 +98,6 @@ const defaultManualSubmitText = [
   // translate to EN
   { text: "翻譯成英文", value: "請將上述內容翻譯成流暢的英文" },
 ];
-
-const registerContextMenuToAutoFill = () => {
-  defaultManualSubmitText.forEach((item) => {
-    GM.registerMenuCommand(item.text, async () => {
-      fillAndSubmitText(item.value);
-    });
-  });
-};
 
 const addButtonsToSendDefaultMessage = () => {
   let globalButtons = [];
@@ -187,6 +181,5 @@ const addButtonsToSendDefaultMessage = () => {
   "use strict";
 
   autoFillFromSegment();
-  registerContextMenuToAutoFill();
   addButtonsToSendDefaultMessage();
 })();
