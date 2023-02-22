@@ -145,6 +145,19 @@ const addButtonsToSendDefaultMessage = () => {
 
     // add buttons
     defaultManualSubmitText.forEach((item) => {
+
+      let lastText = talkBlockToInsertButtons.innerText;
+
+      const isPunctuation = (str) => {
+          const punctuationRegex = /^(?![，,：:])[\p{P}\p{S}]$/u;
+          return punctuationRegex.test(str);
+      }
+
+      // 最後一個字元如果是標點符號，就不要顯示「繼續」
+      if (isPunctuation(lastText.charAt(lastText.length - 1)) && item.text == '繼續') {
+          return;
+      }
+
       const button = document.createElement("button");
       button.style.border = "1px solid #d1d5db";
       button.style.borderRadius = "5px";
