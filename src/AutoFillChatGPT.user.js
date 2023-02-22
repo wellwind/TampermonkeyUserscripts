@@ -79,7 +79,7 @@ const fillAndSubmitText = (test) => {
 };
 
 const defaultManualSubmitText = [
-  // exemplify
+  // continue
   { text: "繼續", value: "繼續" },
   // exemplify
   { text: "舉例說明", value: "請舉例說明" },
