@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT: 自動填入提示文字並自動送出
 // @description  自動填入 ChatGPT 提示文字並可設定自動送出提問
-// @version      3.1.3
+// @version      3.1.4
 // @source       https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoFillChatGPT.user.js
 // @namespace    https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoFillChatGPT.user.js
 // @website      https://fullstackladder.dev/
@@ -140,6 +140,7 @@ const addButtonsToSendDefaultMessage = () => {
     buttonsArea.style.display = "flex";
     buttonsArea.style.flexWrap = "wrap";
     buttonsArea.style.paddingTop = 0;
+    buttonsArea.style.paddingLeft = "calc(30px + 0.75rem)";
     talkBlockToInsertButtons.after(buttonsArea);
 
     // add buttons
