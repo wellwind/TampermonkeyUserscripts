@@ -149,7 +149,7 @@ const addButtonsToSendDefaultMessage = () => {
       let lastText = talkBlockToInsertButtons.innerText;
 
       const isPunctuation = (str) => {
-          const punctuationRegex = /^[\p{P}\p{S}]$/u;
+          const punctuationRegex = /^(?![，,：:])[\p{P}\p{S}]$/u;
           return punctuationRegex.test(str);
       }
 
