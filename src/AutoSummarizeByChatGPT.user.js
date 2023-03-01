@@ -13,6 +13,7 @@
 // @grant        GM.setValue
 // @grant        GM.getValue
 // @grant        GM.registerMenuCommand
+// @run-at       document-start
 // ==/UserScript==
 
 const promptBaseSummarize = "請使用流暢的繁體中文分析以下文章，以條列的方式幫我總結文章重點";
