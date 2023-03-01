@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto summarize article by ChatGPT
 // @description  Send article to ChatGPT and get summarization result
-// @version      0.3.0
+// @version      0.3.1
 // @source       https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoSummarizeByChatGPT.user.js
 // @namespace    https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoSummarizeByChatGPT.user.js
 // @website      https://fullstackladder.dev/
