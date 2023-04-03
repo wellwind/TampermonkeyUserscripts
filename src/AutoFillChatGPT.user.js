@@ -94,8 +94,11 @@ const fillAndSubmitText = (test) => {
   textarea.value = test;
   textarea.dispatchEvent(new Event("input", { bubbles: true }));
 
-  const button = textarea.parentElement.querySelector("button:last-child");
-  button.click();
+  setTimeout(() => {
+    // 預設的送出按鈕
+    const button = textarea.parentElement.querySelector("button:last-child");
+    button.click();
+  }, 0);
 };
 
 const defaultManualSubmitText = [
