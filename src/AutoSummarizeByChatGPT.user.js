@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto summarize article by ChatGPT
 // @description  Send article to ChatGPT and get summarization result
-// @version      0.3.1
+// @version      0.3.2
 // @source       https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoSummarizeByChatGPT.user.js
 // @namespace    https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoSummarizeByChatGPT.user.js
 // @website      https://fullstackladder.dev/
@@ -30,13 +30,13 @@ const setAutoFill = async () => {
       textarea.value = prompt;
       textarea.dispatchEvent(new Event("input", { bubbles: true }));
 
-      const button = textarea.parentElement.querySelector(
-        "button.absolute.p-1.rounded-md.text-gray-500.bottom-1\\.5.right-1.md\\:bottom-2\\.5.md\\:right-2.hover\\:bg-gray-100.dark\\:hover\\:text-gray-400.dark\\:hover\\:bg-gray-900.disabled\\:hover\\:bg-transparent.dark\\:disabled\\:hover\\:bg-transparent"
-      );
-      button.click();
+      setTimeout(async() => {
+          const button = textarea.parentElement.querySelector("button:last-child");
+          button.click();
 
-      // 清除暫存的 prompt
-      await GM.setValue("prompt", "");
+          // 清除暫存的 prompt
+          await GM.setValue("prompt", "");
+      }, 60);
     }
   }, 1000);
 };
