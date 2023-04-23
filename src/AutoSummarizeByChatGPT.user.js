@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto summarize article by ChatGPT
 // @description  Send article to ChatGPT and get summarization result
-// @version      0.3.2
+// @version      0.3.3
 // @source       https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoSummarizeByChatGPT.user.js
 // @namespace    https://github.com/wellwind/TampermonkeyUserscripts/raw/main/src/AutoSummarizeByChatGPT.user.js
 // @website      https://fullstackladder.dev/
@@ -46,7 +46,7 @@ const openChatGPT = async (basePrompt, text) => {
   // 設定 prompt 並打開 ChatGPT
   const prompt = `${basePrompt}\n\n${text}`;
   await GM.setValue("prompt", prompt);
-  window.open("https://chat.openai.com/chat", "_blank");
+  window.open("https://chat.openai.com/", "_blank");
 };
 
 const registerSummarizeArticle = async () => {
